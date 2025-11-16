@@ -1,5 +1,5 @@
 #pragma once
-
+#include<vector>
 template<typename T> class TSinglyList
 {
 	struct TNode
@@ -27,7 +27,7 @@ public:
 		pEnd = nullptr;
 		sz = 0;
 	}
-	TSinglyList(const vector<T>& v)
+	TSinglyList(const std::vector<T>& v)
 	{
 		sz = 0;
 		pFirst = nullptr;
@@ -37,14 +37,14 @@ public:
 			PushBack(v[i]);
 		}
 	}
-	TSinglyList(const TSinglyList& list)
+	TSinglyList( TSinglyList& list)
 	{
 		sz = 0;
 		pFirst = nullptr;
 		pEnd = nullptr;
 		for (int i = 0; i < list.sz; i++)
 		{
-			pushBack(list[i].value);
+			PushBack(list[i]);
 		}
 	}
 	TSinglyList(TSinglyList&& list) noexcept
@@ -54,12 +54,12 @@ public:
 		sz = 0;
 		swap(*this, list);
 	}
-	TSinglyList& operator=(const TSinglyList& list)
+	TSinglyList& operator=(TSinglyList& list)
 	{
 		Clean();
 		for (int i = 0; i < list.sz; i++)
 		{
-			pushBack(list[i].value);
+			PushBack(list[i]);
 		}
 		return *this;
 	}
@@ -77,11 +77,11 @@ public:
 		pEnd = nullptr;
 		sz = 0;
 	}
-	void swap(TSinglyList& 1hs, TSinglyList& 2hs)
+	void swap(TSinglyList& hs1, TSinglyList& hs2)
 	{
-		std::swap(1hs.sz, 2hs.sz);
-		std::swap(1hs.pFirst, 2hs.pFirst);
-		std::swap(1hs.pEnd, 2hs.pEnd);
+		std::swap(hs1.sz, hs2.sz);
+		std::swap(hs1.pFirst, hs2.pFirst);
+		std::swap(hs1.pEnd, hs2.pEnd);
 	}
 	TSinglyList& operator=(const TSinglyList&& list)noexcept
 	{
@@ -93,11 +93,11 @@ public:
 	{
 		Clean();
 	}
-	size_t size() const noexcept;
+	size_t size() const noexcept
 	{
 		return sz;
 	}
-	bool IsEmpty() const noexcept;
+	bool IsEmpty() const noexcept
 	{
 		return(sz == 0);
 	}
@@ -118,17 +118,25 @@ public:
 	void PushBack(const T& val)
 	{
 		TNode* t = new TNode(val, nullptr);
-		pEnd->pNext = t;
-		pEnd = t;
+
 		if (pFirst == nullptr)// если 1 элемент в цепочке ( сначала 0)
 		{
 			pFirst = t;
+		}
+		if (pEnd == nullptr)
+		{
+			pEnd = t;
+		}
+		else
+		{
+			pEnd->pNext = t;
+			pEnd = t;
 		}
 		sz++;
 	}
 	void PopFront()noexcept
 	{
-		if (sz = 0)
+		if (sz == 0)
 		{
 			return;
 		}
@@ -161,7 +169,7 @@ public:
 	void PushAfter(size_t pos, const T& val)
 	{
 		TNode* tmp = pFirst;
-		if (pos < 0 || pos >= sz || sz ==0)
+		if (pos < 0 || pos >= sz || sz == 0)
 		{
 			throw 1;
 		}
@@ -180,7 +188,7 @@ public:
 			}
 			sz++;
 		}
-		
+	}
 	void EraseAfter(size_t pos)
 	{
 		TNode* tmp = pFirst;
@@ -203,5 +211,10 @@ public:
 				pEnd = tmp;
 			}
 			sz--;
-		}	
+		}
+	}
+	T& LastValue()
+	{
+		return pEnd->value;
+	}
 };
