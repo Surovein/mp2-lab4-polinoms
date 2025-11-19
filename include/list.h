@@ -2,6 +2,7 @@
 #include<vector>
 template<typename T> class TSinglyList
 {
+protected:
 	struct TNode
 	{
 		T value;
