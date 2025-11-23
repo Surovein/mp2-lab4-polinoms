@@ -1,6 +1,8 @@
 // класс или структура Монома (double коэффициент, целая свернутая степень)
 using namespace std;
 #include<stdint.h>
+#include<string>
+#include <iostream>
 struct Monom
 {
 	double coeff;
@@ -9,7 +11,43 @@ struct Monom
 	{
 		coeff = c;
 		degree = x;
+		if (degree >= 1000)
+		{
+			throw 1;
+		}
 	}
+	Monom()
+	{
+		coeff = 0;
+		degree = 0;
+	}
+	Monom(const string& str)
+	{
+		int index = str.find_first_of("xyz");
+		string tmp = str.substr(0, index);
+		coeff = stod(tmp);
+
+		for (int i = index; i < str.size(); i++)
+		{
+			if (str[i] == 'x')
+			{
+				string stroka(1, str[i + 1]);
+				degree += 100 * stod(stroka);
+			}
+			if (str[i] == 'y')
+			{
+				string stroka(1, str[i + 1]);
+				degree += 10 * stod(stroka); // deg <=9
+			}
+			if (str[i] == 'z')
+			{
+				string stroka(1, str[i + 1]);
+				degree += stod(stroka);
+			}
+		}
+	}
+
+
 	bool operator<(Monom& m)
 	{
 		if (m.degree > degree)
@@ -26,10 +64,57 @@ struct Monom
 		}
 		return false;
 	}
+	bool compare(Monom& x)
+	{
+		if (x.degree == degree && x.coeff==coeff)
+		{
+			return true;
+		}
+		return false;
+	}
 	Monom& operator=(Monom& mon)
 	{
 		degree = mon.degree;
 		coeff = mon.coeff;
 		return *this;
 	}
+	void operator*=(double con)
+	{
+		coeff *=con;
+	}
+	void operator*=(Monom& mon)
+	{
+		degree = mon.degree + degree;
+		coeff *= mon.coeff;
+	}
+	void operator+=(Monom& mon)
+	{
+		if (mon.degree == degree)
+		{
+			coeff += mon.coeff;
+		}
+	}
+	void operator-=(Monom& mon)
+	{
+		if (mon.degree == degree)
+		{
+			coeff -= mon.coeff;
+		}
+	}
+	Monom& operator*(Monom& mon)
+	{
+		degree = mon.degree+degree;
+		coeff = mon.coeff*coeff;
+		return *this;
+	}
+	void Clear()
+	{
+		degree = 0;
+		coeff = 0;
+	}
+//protected:
+//	uint16_t degree()
+//	{
+//		return degree;
+//	}
 };

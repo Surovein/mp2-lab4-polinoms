@@ -2,6 +2,7 @@
 #include <gtest.h>
 #include "list.h"
 #include <vector>
+#include"polinom.h"
 using namespace std;
 TEST(vector, test1)
 {
@@ -126,4 +127,14 @@ TEST(EraseAfter, test17)
 	TSinglyList<int> list(v);
 	list.EraseAfter(3);
 	EXPECT_EQ(list.LastValue(), 4);
+}
+TEST(Polinom_stroka, test18)
+{
+	string tmp = "5x0y2z1+3x5y1z1";
+	Polinom pol(tmp);
+	vector<Monom> v = { {3,511},{5,21} };
+	for (int i = 0; i < pol.size(); i++)
+	{
+		EXPECT_EQ(pol[i].compare(v[i]),true);
+	}
 }
