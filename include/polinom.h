@@ -30,7 +30,12 @@ public:
 		do
 		{
 			index = str.find_first_of("+-", index);
-			Monom mon(str.substr(0, index));
+			if (index == 0)
+			{
+				index = str.find_first_of("+-", 1);
+			}
+			string stroka = str.substr(0, index);
+			Monom mon(stroka);
 			PushBack(mon);
 			//PushBack(Monom(str.substr(0, index)));
 			if (index != std::string::npos)
@@ -46,11 +51,12 @@ public:
 	{
 		Polinom tmp;
 		//Monom Bigest = this[0];
-		for (int i = 0; i < sz; i++)
+		size_t size = sz;
+		for (int i = 0; i < size; i++)
 		{
 			Monom Lowest = operator[](0);
 			int index = -1;
-			for (int j = 1; j < sz; i++)
+			for (int j = 1; j < sz; j++)
 			{
 				if (operator[](j) < Lowest)
 				{
@@ -100,6 +106,7 @@ public:
 	}
 	Polinom& operator+(Polinom& pol)
 	{
+		//Polinom tmp;
 		for (int i = 0; i < size(); i++)
 		{
 			for (int j = 0; j < pol.size(); j++)
@@ -108,10 +115,21 @@ public:
 				{
 					operator[](i) += pol[j];
 				}
-				else if(j==pol.size()-1)
+			}
+		}
+		for (int i = 0; i < pol.size(); i++)
+		{
+			int k = 0;
+			for (int j = 0; j < size(); j++)
+			{
+				if (pol[i] == operator[](j))
 				{
-					PushBack(pol[j]);
+					k++;
 				}
+			}
+			if (k == 0)
+			{
+				PushBack(pol[i]);
 			}
 		}
 		return *this;
@@ -126,10 +144,21 @@ public:
 				{
 					operator[](i) -= pol[j];
 				}
-				else if (j == pol.size() - 1)
+			}
+		}
+		for (int i = 0; i < pol.size(); i++)
+		{
+			int k = 0;
+			for (int j = 0; j < size(); j++)
+			{
+				if (pol[i] == operator[](j))
 				{
-					PushBack(pol[j]);
+					k++;
 				}
+			}
+			if (k == 0)
+			{
+				PushBack(pol[i]*(-1.0));
 			}
 		}
 		return *this;
@@ -144,10 +173,21 @@ public:
 				{
 					operator[](i) += pol[j];
 				}
-				else if (j == pol.size() - 1)
+			}
+		}
+		for (int i = 0; i < pol.size(); i++)
+		{
+			int k = 0;
+			for (int j = 0; j < size(); j++)
+			{
+				if (pol[i] == operator[](j))
 				{
-					PushBack(pol[j]);
+					k++;
 				}
+			}
+			if (k == 0)
+			{
+				PushBack(pol[i]);
 			}
 		}
 	}
@@ -161,14 +201,25 @@ public:
 				{
 					operator[](i) -= pol[j];
 				}
-				else if (j == pol.size() - 1)
+			}
+		}
+		for (int i = 0; i < pol.size(); i++)
+		{
+			int k = 0;
+			for (int j = 0; j < size(); j++)
+			{
+				if (pol[i] == operator[](j))
 				{
-					PushBack(pol[j]);
+					k++;
 				}
+			}
+			if (k == 0)
+			{
+				PushBack(pol[i] * (-1.0));
 			}
 		}
 	}
-	Polinom& operator*(Polinom& pol)
+	Polinom operator*(Polinom& pol)
 	{
 		Monom tmp_mon;
 		Polinom tmp;
@@ -177,11 +228,12 @@ public:
 			for (int j = 0; j < pol.size(); j++)
 			{
 				tmp_mon = operator[](i) * pol[j];
+				//cout << "mon=" << tmp_mon << endl;
 				tmp.PushBack(tmp_mon);
-				tmp_mon.Clear();
+				//tmp_mon.Clear();
 			}
 		}
-		tmp.Sort();
+		//tmp.Sort();
 		return tmp;
 	}
 	~Polinom()

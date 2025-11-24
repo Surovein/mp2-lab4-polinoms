@@ -23,6 +23,8 @@ struct Monom
 	}
 	Monom(const string& str)
 	{
+		coeff = 0;
+		degree = 0;
 		int index = str.find_first_of("xyz");
 		string tmp = str.substr(0, index);
 		coeff = stod(tmp);
@@ -82,11 +84,17 @@ struct Monom
 	{
 		coeff *=con;
 	}
+	Monom& operator*(double con)
+	{
+		coeff *= con;
+		return *this;
+	}
 	void operator*=(Monom& mon)
 	{
 		degree = mon.degree + degree;
 		coeff *= mon.coeff;
 	}
+
 	void operator+=(Monom& mon)
 	{
 		if (mon.degree == degree)
@@ -112,9 +120,9 @@ struct Monom
 		degree = 0;
 		coeff = 0;
 	}
-//protected:
-//	uint16_t degree()
-//	{
-//		return degree;
-//	}
+	friend ostream& operator<<(ostream& os, const Monom& obj)
+	{
+		os << obj.coeff << " " << obj.degree;
+		return os;
+	}
 };

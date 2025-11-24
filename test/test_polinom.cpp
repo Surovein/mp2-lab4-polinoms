@@ -132,9 +132,146 @@ TEST(Polinom_stroka, test18)
 {
 	string tmp = "5x0y2z1+3x5y1z1";
 	Polinom pol(tmp);
-	vector<Monom> v = { {3,511},{5,21} };
+	vector<Monom> v = { {5,21}, {3,511} };
 	for (int i = 0; i < pol.size(); i++)
 	{
 		EXPECT_EQ(pol[i].compare(v[i]),true);
 	}
+}
+TEST(Polinom_polinom, test19)
+{
+	string tmp = "5x0y2z1+3x5y1z1";
+	Polinom pol(tmp);
+	Polinom Pol(pol);
+	EXPECT_EQ(pol == Pol, true);
+}
+TEST(Polinom_const, test20)
+{
+	string tmp1 = "5x0y2z1+3x5y1z1";
+	string tmp2 = "50x0y2z1+30x5y1z1";
+	Polinom pol(tmp1);
+	Polinom res(tmp2);
+	double c = 10;
+	EXPECT_EQ(pol*10 == res, true);
+}
+TEST(Polinom_monom, test21)
+{
+	string tmp1 = "5x0y2z1+3x5y1z1";
+	string tmp2 = "50x2y4z3+30x7y3z3";
+	Polinom pol(tmp1);
+	Polinom res(tmp2);
+	Monom m(10,222);
+	EXPECT_EQ(pol * m == res, true);
+}
+TEST(Polinom_polinom, test22)
+{
+	string tmp1 = "5x0y2z1+3x5y1z1";
+	string tmp3 = "5x0y2z1+3x5y1z1";
+	string tmp4 = "5x0y2z1+3x5y1z1";
+	string tmp2 = "15x0y2z1+9x5y1z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom pol2(tmp4);
+	Polinom res(tmp2);
+	Polinom RES = pol + pol1 + pol2;
+	//for (int i = 0; i < RES.size(); i++)
+	//{
+	//	cout << RES[i] << endl;
+	//}
+	//cout << "-------" << endl;
+	EXPECT_EQ(RES == res, true);
+}
+TEST(Polinom_polinom, test23)
+{
+	string tmp1 = "5x0y2z1+3x5y1z1";
+	string tmp3 = "10x1y2z1+10x2y1z1";
+	string tmp4 = "5x0y2z1+3x5y1z1";
+	string tmp2 = "10x0y2z1+6x5y1z1+10x1y2z1+10x2y1z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom pol2(tmp4);
+	Polinom res(tmp2);
+	Polinom RES;
+	RES = pol + pol1 + pol2;
+	//for (int i = 0; i < RES.size(); i++)
+	//{
+	//	cout << RES[i] << endl;
+	//}
+	//EXPECT_EQ(RES == res, true);
+}
+TEST(Polinom_polinom, test24)
+{
+	string tmp1 = "5x0y2z1+3x5y1z1";
+	string tmp3 = "5x0y2z1+3x5y1z1";
+	string tmp2 = "0x0y2z1+0x5y1z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	RES = pol - pol1;
+	EXPECT_EQ(RES == res, true);
+}
+TEST(Polinom_polinom, test25)
+{
+	string tmp1 = "5x0y2z1+3x5y1z1";
+	string tmp3 = "5x0y2z1+3x5y1z1-4x2y2z1";
+	string tmp2 = "0x0y2z1+0x5y1z1+4x2y2z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	RES = pol - pol1;
+	EXPECT_EQ(RES == res, true);
+}
+TEST(Polinom_polinom, test26)
+{
+	string tmp1 = "-5x0y2z1+3x5y1z1";
+	string tmp3 = "-5x0y2z1+3x5y1z1-4x2y2z1";
+	string tmp2 = "0x0y2z1+0x5y1z1+4x2y2z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	RES = pol - pol1;
+	EXPECT_EQ(RES == res, true);
+}
+TEST(Polinom_polinom, test27)
+{
+	string tmp1 = "-5x0y2z1+3x5y1z1";
+	string tmp3 = "-5x0y2z1+3x5y1z1-4x2y2z1";
+	string tmp2 = "-10x0y2z1+6x5y1z1-4x2y2z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	pol+=pol1;
+	EXPECT_EQ(pol == res, true);
+}
+TEST(Polinom_polinom, test28)
+{
+	string tmp1 = "-5x0y2z1+3x5y1z1";
+	string tmp3 = "-5x0y2z1+3x5y1z1-4x2y2z1";
+	string tmp2 = "0x0y2z1+0x5y1z1+4x2y2z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	pol -= pol1;
+	EXPECT_EQ(pol == res, true);
+}
+TEST(Polinom_polinom, test29)
+{
+	string tmp1 = "-5x0y2z1";
+	string tmp3 = "-5x0y2z1+3x2y1z1";
+	string tmp2 = "25x0y4z2-15x2y3z2";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	RES = pol1*pol;
+	//for (int i = 0; i < RES.size(); i++)
+	//{
+	//	cout <<"RES[i]=="<< RES[i] << endl;
+	//}
+	EXPECT_EQ(RES == res, true);
 }
