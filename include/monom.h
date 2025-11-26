@@ -50,7 +50,7 @@ struct Monom
 	}
 
 
-	bool operator<(Monom& m)
+	bool operator<(const Monom& m) const
 	{
 		if (m.degree > degree)
 		{
@@ -58,7 +58,7 @@ struct Monom
 		}
 		return false;
 	}
-	bool operator==(Monom& m)
+	bool operator==(const Monom& m) const
 	{
 		if (m.degree == degree)
 		{
@@ -66,7 +66,7 @@ struct Monom
 		}
 		return false;
 	}
-	bool compare(Monom& x)
+	bool compare(const Monom& x) const
 	{
 		if (x.degree == degree && x.coeff==coeff)
 		{
@@ -74,46 +74,57 @@ struct Monom
 		}
 		return false;
 	}
-	Monom& operator=(Monom& mon)
+	Monom& operator=(const Monom& mon)
 	{
 		degree = mon.degree;
 		coeff = mon.coeff;
 		return *this;
 	}
-	void operator*=(double con)
+	Monom& operator*=(double con)
 	{
 		coeff *=con;
-	}
-	Monom& operator*(double con)
-	{
-		coeff *= con;
 		return *this;
 	}
-	void operator*=(Monom& mon)
+//	a *= b *= c;
+
+
+	Monom operator*(double con)
+	{
+		return Monom(coeff * con, degree);
+	}
+	
+	Monom& operator*=(Monom& mon)
 	{
 		degree = mon.degree + degree;
 		coeff *= mon.coeff;
+		return *this;
 	}
 
-	void operator+=(Monom& mon)
+
+
+
+	Monom& operator+=(Monom& mon)
 	{
 		if (mon.degree == degree)
 		{
 			coeff += mon.coeff;
 		}
+		return *this;
 	}
-	void operator-=(Monom& mon)
+	Monom& operator-=(Monom& mon)
 	{
 		if (mon.degree == degree)
 		{
 			coeff -= mon.coeff;
 		}
+		return *this;
 	}
 	Monom& operator*(Monom& mon)
 	{
 		degree = mon.degree+degree;
 		coeff = mon.coeff*coeff;
 		return *this;
+
 	}
 	void Clear()
 	{

@@ -138,6 +138,38 @@ TEST(Polinom_stroka, test18)
 		EXPECT_EQ(pol[i].compare(v[i]),true);
 	}
 }
+
+TEST(Polinom_polinom, test100)
+{
+	string tmp = "0";
+	Polinom pol(tmp);
+	Polinom Pol(pol);
+	EXPECT_EQ(pol == Pol, true);
+}
+
+TEST(Polinom_polinom, test101)
+{
+	string tmp = "0";
+	string tmp2 = "5x0y2z1";
+	Polinom pol1(tmp);
+	Polinom pol2(tmp2);
+	Polinom Pol(tmp2);
+	Polinom res = pol1 + pol2;
+	EXPECT_EQ(true, Pol == res);
+}
+
+TEST(Polinom_polinom, test102)
+{
+	string tmp = "0";
+	string tmp2 = "5x0y2z1";
+	Polinom pol1(tmp);
+	Polinom pol2(tmp2);
+	Polinom Pol(tmp2);
+	Polinom res = pol2 - pol2;
+	EXPECT_EQ(true, pol1==res);
+}
+
+
 TEST(Polinom_polinom, test19)
 {
 	string tmp = "5x0y2z1+3x5y1z1";
@@ -228,6 +260,18 @@ TEST(Polinom_polinom, test26)
 	string tmp1 = "-5x0y2z1+3x5y1z1";
 	string tmp3 = "-5x0y2z1+3x5y1z1-4x2y2z1";
 	string tmp2 = "0x0y2z1+0x5y1z1+4x2y2z1";
+	Polinom pol(tmp1);
+	Polinom pol1(tmp3);
+	Polinom res(tmp2);
+	Polinom RES;
+	RES = pol - pol1;
+	EXPECT_EQ(RES == res, true);
+}
+TEST(Polinom_polinom, test261)
+{
+	string tmp1 = "-5x0y2z1+3x5y1z1";
+	string tmp3 = "-5x0y2z1+3x5y1z1";
+	string tmp2 = "0x0y0z0";
 	Polinom pol(tmp1);
 	Polinom pol1(tmp3);
 	Polinom res(tmp2);

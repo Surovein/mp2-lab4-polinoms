@@ -12,10 +12,12 @@ class Polinom : private TSinglyList<Monom>
 public:
 	Polinom(): TSinglyList()
 	{
+		//PushFront(Monom("0"));
 	}
 
 	Polinom(string& str): TSinglyList()
 	{
+		//PushFront(Monom("0"));
 		Parsing(str);
 		Sort();
 	}
@@ -90,53 +92,93 @@ public:
 	}
 	Polinom& operator*(double con)
 	{
-		for (int i = 0; i < size(); i++)
-		{
-			operator[](i) *= con;
+		TNode* curr = pFirst;
+		while (curr != nullptr) {
+			curr->value *= con;
+			curr = curr->pNext;
 		}
+
+		//for (int i = 0; i < size(); i++)
+		//{
+		//	operator[](i) *= con;
+		//}
 		return *this;
 	}
 	Polinom& operator*(Monom& mon)
 	{
-		for (int i = 0; i < size(); i++)
-		{
-			operator[](i) *= mon;
+		TNode* curr = pFirst;
+		while (curr != nullptr) {
+			curr->value *= mon;
+			curr = curr->pNext;
 		}
+		//for (int i = 0; i < size(); i++)
+		//{
+		//	operator[](i) *= mon;
+		//}
 		return *this;
 	}
-	Polinom& operator+(Polinom& pol)
+	Polinom operator+(Polinom& pol)
 	{
-		//Polinom tmp;
-		for (int i = 0; i < size(); i++)
-		{
-			for (int j = 0; j < pol.size(); j++)
-			{
-				if (pol[j] == operator[](i))
-				{
-					operator[](i) += pol[j];
-				}
-			}
-		}
-		for (int i = 0; i < pol.size(); i++)
+		Polinom tmp;
+		TNode* curr1 = pFirst;
+		TNode* curr2 = pol.pFirst;
+
+		while (curr1 != nullptr)
 		{
 			int k = 0;
-			for (int j = 0; j < size(); j++)
+			double sum = curr1->value.coeff;// алгоритм слияния 2х упорядоченных массивов
+			uint16_t DEG = curr1->value.degree;
+			sum += curr2->value.coeff;
+			while (curr2 != nullptr)
 			{
-				if (pol[i] == operator[](j))
+				
+				if (curr1->value == curr2->value)
 				{
+					sum += curr2->value.coeff;
 					k++;
 				}
 			}
+			if (k != 0)
+			{
+				Monom M(sum, DEG);
+				tmp.PushBack(M);
+			}
 			if (k == 0)
 			{
-				PushBack(pol[i]);
+				tmp.PushBack(curr1->value);
 			}
 		}
-		return *this;
+		//for (int i = 0; i < size(); i++)
+		//{
+		//	for (int j = 0; j < pol.size(); j++)
+		//	{
+		//		if (pol[j] == operator[](i))
+		//		{
+		//			//operator[](i) += pol[j];
+		//			tmp.PushBack(pol[i] + pol[j])
+		//		}
+		//	}
+		//}
+		//for (int i = 0; i < pol.size(); i++)
+		//{
+		//	int k = 0;
+		//	for (int j = 0; j < size(); j++)
+		//	{
+		//		if (pol[i] == operator[](j))
+		//		{
+		//			k++;
+		//		}
+		//	}
+		//	if (k == 0)
+		//	{
+		//		tmp.PushBack(pol[i]);
+		//	}
+		//}
+		return tmp;
 	}
-	Polinom& operator-(Polinom& pol)
+	Polinom operator-(Polinom& pol)
 	{
-		for (int i = 0; i < size(); i++)
+		/*for (int i = 0; i < size(); i++)
 		{
 			for (int j = 0; j < pol.size(); j++)
 			{
@@ -160,12 +202,12 @@ public:
 			{
 				PushBack(pol[i]*(-1.0));
 			}
-		}
-		return *this;
+		}*/
+		return tmp;
 	}
 	void operator+=(Polinom& pol)
 	{
-		for (int i = 0; i < size(); i++)
+		/*for (int i = 0; i < size(); i++)
 		{
 			for (int j = 0; j < pol.size(); j++)
 			{
@@ -189,11 +231,11 @@ public:
 			{
 				PushBack(pol[i]);
 			}
-		}
+		}*/
 	}
 	void operator-=(Polinom& pol)
 	{
-		for (int i = 0; i < size(); i++)
+		/*for (int i = 0; i < size(); i++)
 		{
 			for (int j = 0; j < pol.size(); j++)
 			{
@@ -217,32 +259,32 @@ public:
 			{
 				PushBack(pol[i] * (-1.0));
 			}
-		}
+		}*/
 	}
 	Polinom operator*(Polinom& pol)
 	{
-		Monom tmp_mon;
-		Polinom tmp;
-		for (int i = 0; i < size(); i++)
-		{
-			for (int j = 0; j < pol.size(); j++)
-			{
-				tmp_mon = operator[](i) * pol[j];
-				//cout << "mon=" << tmp_mon << endl;
-				tmp.PushBack(tmp_mon);
-				//tmp_mon.Clear();
-			}
-		}
-		//tmp.Sort();
+		//Monom tmp_mon;
+		//Polinom tmp;
+		//for (int i = 0; i < size(); i++)
+		//{
+		//	for (int j = 0; j < pol.size(); j++)
+		//	{
+		//		tmp_mon = operator[](i) * pol[j];
+		//		//cout << "mon=" << tmp_mon << endl;
+		//		tmp.PushBack(tmp_mon);
+		//		//tmp_mon.Clear();
+		//	}
+		//}
+		////tmp.Sort();
 		return tmp;
 	}
 	~Polinom()
 	{
 		TSinglyList<Monom>::~TSinglyList();
 	}
-	bool operator==(Polinom& pol)
+	bool operator==(Polinom& pol)// const
 	{
-		int k = 0;
+		/*int k = 0;
 		if (size() != pol.size())
 		{
 			return false;
@@ -263,7 +305,7 @@ public:
 					return false;
 				}
 			}
-			k = 0;
+			k = 0;*/ // можно учесть отсортированность мономов
 			return true;
 		}
 	}

@@ -167,6 +167,26 @@ public:
 		}
 		return tmp->value;
 	}
+
+	T operator[](size_t pos) const
+	{
+		TNode* tmp = pFirst;
+		if (sz == 0 || pos >= sz || pos < 0)
+		{
+			throw 1;
+		}
+		if (pos == 0)
+		{
+			return tmp->value;
+		}
+		for (int i = 0; i < pos; i++)
+		{
+			tmp = tmp->pNext;
+		}
+		return tmp->value;
+	}
+
+
 	void PushAfter(size_t pos, const T& val)
 	{
 		TNode* tmp = pFirst;
