@@ -28,31 +28,42 @@ struct Monom
 		int index = str.find_first_of("xyz");
 		string tmp = str.substr(0, index);
 		coeff = stod(tmp);
-
-		for (int i = index; i < str.size(); i++)
+		if (index != std::string::npos)
 		{
-			if (str[i] == 'x')
+			for (int i = index; i < str.size(); i++)
 			{
-				string stroka(1, str[i + 1]);
-				degree += 100 * stod(stroka);
-			}
-			if (str[i] == 'y')
-			{
-				string stroka(1, str[i + 1]);
-				degree += 10 * stod(stroka); // deg <=9
-			}
-			if (str[i] == 'z')
-			{
-				string stroka(1, str[i + 1]);
-				degree += stod(stroka);
+				if (str[i] == 'x')
+				{
+					string stroka(1, str[i + 1]);
+					degree += 100 * stod(stroka);
+				}
+				if (str[i] == 'y')
+				{
+					string stroka(1, str[i + 1]);
+					degree += 10 * stod(stroka); // deg <=9
+				}
+				if (str[i] == 'z')
+				{
+					string stroka(1, str[i + 1]);
+					degree += stod(stroka);
+				}
 			}
 		}
+
 	}
 
 
 	bool operator<(const Monom& m) const
 	{
 		if (m.degree > degree)
+		{
+			return true;
+		}
+		return false;
+	}
+	bool operator>(const Monom& m) const
+	{
+		if (m.degree < degree)
 		{
 			return true;
 		}
@@ -93,7 +104,7 @@ struct Monom
 		return Monom(coeff * con, degree);
 	}
 	
-	Monom& operator*=(Monom& mon)
+	Monom& operator*=(Monom& mon) 
 	{
 		degree = mon.degree + degree;
 		coeff *= mon.coeff;
