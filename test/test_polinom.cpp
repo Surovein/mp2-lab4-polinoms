@@ -132,7 +132,7 @@ TEST(Polinom_stroka, test18)
 {
 	string tmp = "5x0y2z1+3x5y1z1";
 	Polinom pol(tmp);
-	vector<Monom> v = { {5,21}, {3,511} };
+	vector<Monom> v = { {3,511},{5,21} };
 	for (int i = 0; i < pol.size(); i++)
 	{
 		EXPECT_EQ(pol[i].compare(v[i]),true);
@@ -155,7 +155,7 @@ TEST(Polinom_polinom, test101)
 	Polinom pol2(tmp2);
 	Polinom Pol(tmp2);
 	Polinom res = pol1 + pol2;
-	EXPECT_EQ(true, Pol == res);
+	EXPECT_EQ(true,Pol == res);
 }
 
 TEST(Polinom_polinom, test102)
@@ -164,9 +164,9 @@ TEST(Polinom_polinom, test102)
 	string tmp2 = "5x0y2z1";
 	Polinom pol1(tmp);
 	Polinom pol2(tmp2);
-	Polinom Pol(tmp2);
+	Polinom Pol(tmp);
 	Polinom res = pol2 - pol2;
-	EXPECT_EQ(true, pol1==res);
+	EXPECT_EQ(true,Pol == res);
 }
 
 
@@ -200,7 +200,7 @@ TEST(Polinom_polinom, test22)
 	string tmp1 = "5x0y2z1+3x5y1z1";
 	string tmp3 = "5x0y2z1+3x5y1z1";
 	string tmp4 = "5x0y2z1+3x5y1z1";
-	string tmp2 = "15x0y2z1+9x5y1z1";
+	string tmp2 = "9x5y1z1+15x0y2z1";
 	Polinom pol(tmp1);
 	Polinom pol1(tmp3);
 	Polinom pol2(tmp4);

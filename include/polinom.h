@@ -12,7 +12,7 @@ class Polinom : private TSinglyList<Monom>
 public:
 	Polinom(): TSinglyList()
 	{
-		//PushFront(Monom("0"));
+		//PushFront(Monom("0"));//empty
 	}
 
 	Polinom(string& str): TSinglyList()
@@ -34,11 +34,14 @@ public:
 			index = str.find_first_of("+-", index);
 			if (index == 0)
 			{
-				index = str.find_first_of("+-", 1);
+				index = str.find_first_of("+-", 1); // 1) избавиться от скобок 2) поменять возвращаемое в +,=+ 3) метод для отсеивания 0
 			}
 			string stroka = str.substr(0, index);
 			Monom mon(stroka);
-			PushBack(mon);
+			if (mon.coeff != 0)
+			{
+				PushBack(mon);
+			}
 			//PushBack(Monom(str.substr(0, index)));
 			if (index != std::string::npos)
 			{
@@ -53,31 +56,51 @@ public:
 	{
 		Polinom tmp;
 		//Monom Bigest = this[0];
-		size_t size = sz;
-		for (int i = 0; i < size; i++)
+		//size_t size = sz;
+		TNode* current = pFirst;
+		while (current != nullptr)
 		{
-			Monom Lowest = operator[](0);
-			int index = -1;
-			for (int j = 1; j < sz; j++)
+			Monom Bigest = pFirst->value;
+			int index = -2;
+			int big_index = -1;
+			TNode* CUR = pFirst;
+			while(CUR != nullptr)
 			{
-				if (operator[](j) < Lowest)
+				index++;
+				if (CUR->value > Bigest)
 				{
-					Lowest = operator[](j);
-					index = j - 1;
+					Bigest = CUR->value;
+					big_index = index;
 				}
+				CUR = CUR->pNext;
 			}
-			tmp.PushBack(Lowest);
-			if (index == -1)
+			tmp.PushBack(Bigest);
+			if (big_index == -1)
 			{
 				PopFront();
 			}
 			else
 			{
-				EraseAfter(index);
+				EraseAfter(big_index);
+			}
+			if (sz == 0)
+			{
+				break;
+				
+			}
+			else
+			{
+				current = current->pNext;
 			}
 		}
+		if (sz != 0)
+		{
+			tmp.PushBack(pEnd->value);
+		}
+		//tmp.Zero();
 		operator=(tmp);
 	}
+
 	size_t size() const noexcept
 	{
 		return TSinglyList<Monom>::size();
@@ -90,180 +113,253 @@ public:
 	{
 		return (Polinom&) TSinglyList<Monom>::operator=(pol);
 	}
-	Polinom& operator*(double con)
+	Polinom operator*(double con)
 	{
+		Polinom result;
 		TNode* curr = pFirst;
 		while (curr != nullptr) {
-			curr->value *= con;
+			Monom tmp_monom = curr->value * con;
+			result.PushBack(tmp_monom);
 			curr = curr->pNext;
 		}
-
-		//for (int i = 0; i < size(); i++)
-		//{
-		//	operator[](i) *= con;
-		//}
-		return *this;
+		
+		result.Zero();
+		return result;
 	}
-	Polinom& operator*(Monom& mon)
+	Polinom operator*(Monom& mon)
 	{
+		Polinom result;
 		TNode* curr = pFirst;
 		while (curr != nullptr) {
-			curr->value *= mon;
+			Monom tmp_monom = curr->value * mon;
+			result.PushBack(tmp_monom);
 			curr = curr->pNext;
 		}
-		//for (int i = 0; i < size(); i++)
-		//{
-		//	operator[](i) *= mon;
-		//}
-		return *this;
+		result.Zero();
+
+		return result;
+	}
+	void Zero()
+	{
+		TNode* tmp = pFirst;
+		int index = -2;
+		while (tmp != nullptr)
+		{
+			index++;
+			if (tmp->value.coeff == 0)
+			{
+				if (index == -1)
+				{
+					tmp = tmp->pNext;
+					PopFront();
+					sz--;
+				}
+				else
+				{
+					tmp = tmp->pNext;
+					EraseAfter(index);
+					sz--;
+				}
+			}
+			else
+			{
+				tmp = tmp->pNext;
+			}
+
+		}
 	}
 	Polinom operator+(Polinom& pol)
 	{
-		Polinom tmp;
-		TNode* curr1 = pFirst;
-		TNode* curr2 = pol.pFirst;
-
-		while (curr1 != nullptr)
+		Polinom result;
+		TNode* tmp1 = pFirst;
+		TNode* tmp2 = pol.pFirst;
+		while (tmp1 != nullptr && tmp2 != nullptr)
 		{
-			int k = 0;
-			double sum = curr1->value.coeff;// алгоритм слияния 2х упорядоченных массивов
-			uint16_t DEG = curr1->value.degree;
-			sum += curr2->value.coeff;
-			while (curr2 != nullptr)
+			if (tmp1->value > tmp2->value)
 			{
-				
-				if (curr1->value == curr2->value)
+				result.PushBack(tmp1->value);
+				tmp1 = tmp1->pNext;
+			}
+			else if (tmp1->value < tmp2->value)
+			{
+				result.PushBack(tmp2->value);
+				tmp2 = tmp2->pNext;
+			}
+			else
+			{
+				double sumcoef = tmp1->value.coeff + tmp2->value.coeff;
+				if (sumcoef != 0)
 				{
-					sum += curr2->value.coeff;
-					k++;
+					result.PushBack(Monom(sumcoef, tmp1->value.degree));
 				}
+				tmp1 = tmp1->pNext;
+				tmp2 = tmp2->pNext;
 			}
-			if (k != 0)
-			{
-				Monom M(sum, DEG);
-				tmp.PushBack(M);
-			}
-			if (k == 0)
-			{
-				tmp.PushBack(curr1->value);
-			}
+
 		}
-		//for (int i = 0; i < size(); i++)
-		//{
-		//	for (int j = 0; j < pol.size(); j++)
-		//	{
-		//		if (pol[j] == operator[](i))
-		//		{
-		//			//operator[](i) += pol[j];
-		//			tmp.PushBack(pol[i] + pol[j])
-		//		}
-		//	}
-		//}
-		//for (int i = 0; i < pol.size(); i++)
-		//{
-		//	int k = 0;
-		//	for (int j = 0; j < size(); j++)
-		//	{
-		//		if (pol[i] == operator[](j))
-		//		{
-		//			k++;
-		//		}
-		//	}
-		//	if (k == 0)
-		//	{
-		//		tmp.PushBack(pol[i]);
-		//	}
-		//}
-		return tmp;
+		while (tmp1 != nullptr)
+		{
+			result.PushBack(tmp1->value);
+			tmp1 = tmp1->pNext;
+		}
+		while (tmp2 != nullptr)
+		{
+			result.PushBack(tmp2->value);
+			tmp2 = tmp2->pNext;
+		}
+		result.Zero();
+		return result;
 	}
 	Polinom operator-(Polinom& pol)
 	{
-		/*for (int i = 0; i < size(); i++)
+		Polinom result;
+		TNode* tmp1 = pFirst;
+		TNode* tmp2 = pol.pFirst;
+		while (tmp1 != nullptr && tmp2 != nullptr)
 		{
-			for (int j = 0; j < pol.size(); j++)
+			if (tmp1->value > tmp2->value)
 			{
-				if (pol[j] == operator[](i))
-				{
-					operator[](i) -= pol[j];
-				}
+				result.PushBack(tmp1->value*(-1));
+				tmp1 = tmp1->pNext;
 			}
+			else if (tmp1->value < tmp2->value*(-1))
+			{
+				result.PushBack(tmp2->value*(-1));
+				tmp2 = tmp2->pNext;
+			}
+			else
+			{
+				double sumcoef = tmp1->value.coeff - tmp2->value.coeff;
+				if (sumcoef != 0)
+				{
+					result.PushBack(Monom(sumcoef, tmp1->value.degree)*(-1));
+				}
+				tmp1 = tmp1->pNext;
+				tmp2 = tmp2->pNext;
+			}
+
 		}
-		for (int i = 0; i < pol.size(); i++)
+		while (tmp1 != nullptr)
 		{
-			int k = 0;
-			for (int j = 0; j < size(); j++)
-			{
-				if (pol[i] == operator[](j))
-				{
-					k++;
-				}
-			}
-			if (k == 0)
-			{
-				PushBack(pol[i]*(-1.0));
-			}
-		}*/
-		return tmp;
+			result.PushBack(tmp1->value*(-1));
+			tmp1 = tmp1->pNext;
+		}
+		while (tmp2 != nullptr)
+		{
+			result.PushBack(tmp2->value*(-1));
+			tmp2 = tmp2->pNext;
+		}
+		result.Zero();
+		return result;
 	}
-	void operator+=(Polinom& pol)
+	Polinom& operator+=(Polinom& pol)
 	{
-		/*for (int i = 0; i < size(); i++)
+		Polinom result;
+		TNode* tmp1 = pFirst;
+		TNode* tmp2 = pol.pFirst;
+		while (tmp1 != nullptr && tmp2 != nullptr)
 		{
-			for (int j = 0; j < pol.size(); j++)
+			if (tmp1->value > tmp2->value)
 			{
-				if (pol[j] == operator[](i))
-				{
-					operator[](i) += pol[j];
-				}
+				result.PushBack(tmp1->value);
+				tmp1 = tmp1->pNext;
 			}
+			else if (tmp1->value < tmp2->value)
+			{
+				result.PushBack(tmp2->value);
+				tmp2 = tmp2->pNext;
+			}
+			else
+			{
+				double sumcoef = tmp1->value.coeff + tmp2->value.coeff;
+				if (sumcoef != 0)
+				{
+					result.PushBack(Monom(sumcoef, tmp1->value.degree));
+				}
+				tmp1 = tmp1->pNext;
+				tmp2 = tmp2->pNext;
+			}
+
 		}
-		for (int i = 0; i < pol.size(); i++)
+		while (tmp1 != nullptr)
 		{
-			int k = 0;
-			for (int j = 0; j < size(); j++)
-			{
-				if (pol[i] == operator[](j))
-				{
-					k++;
-				}
-			}
-			if (k == 0)
-			{
-				PushBack(pol[i]);
-			}
-		}*/
+			result.PushBack(tmp1->value);
+			tmp1 = tmp1->pNext;
+		}
+		while (tmp2 != nullptr)
+		{
+			result.PushBack(tmp2->value);
+			tmp2 = tmp2->pNext;
+		}
+		result.Zero();
+		*this = result;
+		return *this;
 	}
-	void operator-=(Polinom& pol)
+	Polinom& operator-=(Polinom& pol)
 	{
-		/*for (int i = 0; i < size(); i++)
+		Polinom result;
+		TNode* tmp1 = pFirst;
+		TNode* tmp2 = pol.pFirst;
+		while (tmp1 != nullptr && tmp2 != nullptr)
 		{
-			for (int j = 0; j < pol.size(); j++)
+			if (tmp1->value > tmp2->value)
 			{
-				if (pol[j] == operator[](i))
-				{
-					operator[](i) -= pol[j];
-				}
+				result.PushBack(tmp1->value*(-1));
+				tmp1 = tmp1->pNext;
 			}
+			else if (tmp1->value < tmp2->value)
+			{
+				result.PushBack(tmp2->value*(-1));
+				tmp2 = tmp2->pNext;
+			}
+			else
+			{
+				double sumcoef = tmp1->value.coeff - tmp2->value.coeff;
+				if (sumcoef != 0)
+				{
+					result.PushBack(Monom(sumcoef, tmp1->value.degree)*(-1));
+				}
+				tmp1 = tmp1->pNext;
+				tmp2 = tmp2->pNext;
+			}
+
 		}
-		for (int i = 0; i < pol.size(); i++)
+		while (tmp1 != nullptr)
 		{
-			int k = 0;
-			for (int j = 0; j < size(); j++)
-			{
-				if (pol[i] == operator[](j))
-				{
-					k++;
-				}
-			}
-			if (k == 0)
-			{
-				PushBack(pol[i] * (-1.0));
-			}
-		}*/
+			result.PushBack(tmp1->value*(-1));
+			tmp1 = tmp1->pNext;
+		}
+		while (tmp2 != nullptr)
+		{
+			result.PushBack(tmp2->value*(-1));
+			tmp2 = tmp2->pNext;
+		}
+		result.Zero();
+		result.Zero();
+		*this = result;
+		return *this;
 	}
 	Polinom operator*(Polinom& pol)
 	{
-		//Monom tmp_mon;
+		Polinom result;
+		Monom tmp_mon;
+		TNode* tmp1 = pFirst;
+		while (tmp1 != nullptr)
+		{
+			TNode* tmp2 = pol.pFirst;
+			while (tmp2 != nullptr)
+			{
+				tmp_mon = tmp1->value * tmp2->value;
+				if (tmp_mon.coeff != 0)
+				{
+					result.PushBack(tmp_mon);
+				}
+				tmp2 = tmp2->pNext;
+			}
+			tmp1 = tmp1->pNext;
+		}
+		result.Sort();
+		return result;
 		//Polinom tmp;
 		//for (int i = 0; i < size(); i++)
 		//{
@@ -276,7 +372,7 @@ public:
 		//	}
 		//}
 		////tmp.Sort();
-		return tmp;
+		//return tmp;
 	}
 	~Polinom()
 	{
@@ -284,29 +380,25 @@ public:
 	}
 	bool operator==(Polinom& pol)// const
 	{
-		/*int k = 0;
 		if (size() != pol.size())
 		{
 			return false;
 		}
 		else
 		{
-			for (int i = 0; i < size(); i++)
+			TNode* tmp1 = pFirst;
+			TNode* tmp2 = pol.pFirst;
+			while (tmp1 != nullptr)
 			{
-				for (int j = 0; j < size(); j++)
-				{
-					if (operator[](i).compare(pol[j]))
-					{
-						k++;
-					}
-				}
-				if (k == 0)
+				if (tmp1->value.compare(tmp2->value) == false)
 				{
 					return false;
 				}
+				tmp1 = tmp1->pNext;
+				tmp2 = tmp2->pNext;
 			}
-			k = 0;*/ // можно учесть отсортированность мономов
-			return true;
+			
 		}
+		return true;
 	}
 };
