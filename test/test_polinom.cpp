@@ -271,7 +271,7 @@ TEST(Polinom_polinom, test261)
 {
 	string tmp1 = "-5x0y2z1+3x5y1z1";
 	string tmp3 = "-5x0y2z1+3x5y1z1";
-	string tmp2 = "0x0y0z0";
+	string tmp2 = "0";
 	Polinom pol(tmp1);
 	Polinom pol1(tmp3);
 	Polinom res(tmp2);

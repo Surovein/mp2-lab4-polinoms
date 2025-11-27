@@ -152,13 +152,11 @@ public:
 				{
 					tmp = tmp->pNext;
 					PopFront();
-					sz--;
 				}
 				else
 				{
 					tmp = tmp->pNext;
 					EraseAfter(index);
-					sz--;
 				}
 			}
 			else
