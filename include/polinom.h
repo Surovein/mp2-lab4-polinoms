@@ -55,10 +55,8 @@ public:
 	void Sort()
 	{
 		Polinom tmp;
-		//Monom Bigest = this[0];
-		//size_t size = sz;
 		TNode* current = pFirst;
-		while (current != nullptr)
+		while (sz!=0)
 		{
 			Monom Bigest = pFirst->value;
 			int index = -2;
@@ -83,21 +81,8 @@ public:
 			{
 				EraseAfter(big_index);
 			}
-			if (sz == 0)
-			{
-				break;
-				
-			}
-			else
-			{
-				current = current->pNext;
-			}
 		}
-		if (sz != 0)
-		{
-			tmp.PushBack(pEnd->value);
-		}
-		//tmp.Zero();
+		tmp.Zero();
 		operator=(tmp);
 	}
 
@@ -376,7 +361,7 @@ public:
 	{
 		TSinglyList<Monom>::~TSinglyList();
 	}
-	bool operator==(Polinom& pol)// const
+	bool operator==(const Polinom& pol) const
 	{
 		if (size() != pol.size())
 		{

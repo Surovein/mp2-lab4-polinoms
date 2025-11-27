@@ -155,7 +155,7 @@ TEST(Polinom_polinom, test101)
 	Polinom pol2(tmp2);
 	Polinom Pol(tmp2);
 	Polinom res = pol1 + pol2;
-	EXPECT_EQ(true,Pol == res);
+	EXPECT_EQ(Pol , res);
 }
 
 TEST(Polinom_polinom, test102)
@@ -166,7 +166,7 @@ TEST(Polinom_polinom, test102)
 	Polinom pol2(tmp2);
 	Polinom Pol(tmp);
 	Polinom res = pol2 - pol2;
-	EXPECT_EQ(true,Pol == res);
+	EXPECT_EQ(Pol,res);
 }
 
 
@@ -175,7 +175,7 @@ TEST(Polinom_polinom, test19)
 	string tmp = "5x0y2z1+3x5y1z1";
 	Polinom pol(tmp);
 	Polinom Pol(pol);
-	EXPECT_EQ(pol == Pol, true);
+	EXPECT_EQ(pol, Pol);
 }
 TEST(Polinom_const, test20)
 {
@@ -184,7 +184,7 @@ TEST(Polinom_const, test20)
 	Polinom pol(tmp1);
 	Polinom res(tmp2);
 	double c = 10;
-	EXPECT_EQ(pol*10 == res, true);
+	EXPECT_EQ(pol*10,res);
 }
 TEST(Polinom_monom, test21)
 {
@@ -193,7 +193,7 @@ TEST(Polinom_monom, test21)
 	Polinom pol(tmp1);
 	Polinom res(tmp2);
 	Monom m(10,222);
-	EXPECT_EQ(pol * m == res, true);
+	EXPECT_EQ(pol * m, res);
 }
 TEST(Polinom_polinom, test22)
 {
@@ -211,7 +211,7 @@ TEST(Polinom_polinom, test22)
 	//	cout << RES[i] << endl;
 	//}
 	//cout << "-------" << endl;
-	EXPECT_EQ(RES == res, true);
+	EXPECT_EQ(RES, res );
 }
 TEST(Polinom_polinom, test23)
 {
@@ -229,7 +229,12 @@ TEST(Polinom_polinom, test23)
 	//{
 	//	cout << RES[i] << endl;
 	//}
-	//EXPECT_EQ(RES == res, true);
+	//cout << "----" << endl;
+	//for (int i = 0; i < res.size(); i++)
+	//{
+	//	cout << res[i] << endl;
+	//}
+	EXPECT_EQ(RES, res );
 }
 TEST(Polinom_polinom, test24)
 {
@@ -241,7 +246,7 @@ TEST(Polinom_polinom, test24)
 	Polinom res(tmp2);
 	Polinom RES;
 	RES = pol - pol1;
-	EXPECT_EQ(RES == res, true);
+	EXPECT_EQ(RES, res);
 }
 TEST(Polinom_polinom, test25)
 {
@@ -253,7 +258,7 @@ TEST(Polinom_polinom, test25)
 	Polinom res(tmp2);
 	Polinom RES;
 	RES = pol - pol1;
-	EXPECT_EQ(RES == res, true);
+	EXPECT_EQ(RES, res);
 }
 TEST(Polinom_polinom, test26)
 {
@@ -265,7 +270,7 @@ TEST(Polinom_polinom, test26)
 	Polinom res(tmp2);
 	Polinom RES;
 	RES = pol - pol1;
-	EXPECT_EQ(RES == res, true);
+	EXPECT_EQ(RES, res);
 }
 TEST(Polinom_polinom, test261)
 {
@@ -277,7 +282,7 @@ TEST(Polinom_polinom, test261)
 	Polinom res(tmp2);
 	Polinom RES;
 	RES = pol - pol1;
-	EXPECT_EQ(RES == res, true);
+	EXPECT_EQ(RES,res);
 }
 TEST(Polinom_polinom, test27)
 {
@@ -289,7 +294,7 @@ TEST(Polinom_polinom, test27)
 	Polinom res(tmp2);
 	Polinom RES;
 	pol+=pol1;
-	EXPECT_EQ(pol == res, true);
+	EXPECT_EQ(pol, res);
 }
 TEST(Polinom_polinom, test28)
 {
@@ -301,7 +306,7 @@ TEST(Polinom_polinom, test28)
 	Polinom res(tmp2);
 	Polinom RES;
 	pol -= pol1;
-	EXPECT_EQ(pol == res, true);
+	EXPECT_EQ(pol, res);
 }
 TEST(Polinom_polinom, test29)
 {
@@ -317,5 +322,5 @@ TEST(Polinom_polinom, test29)
 	//{
 	//	cout <<"RES[i]=="<< RES[i] << endl;
 	//}
-	EXPECT_EQ(RES == res, true);
+	EXPECT_EQ(RES, res);
 }
